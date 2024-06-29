@@ -14,36 +14,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # BRI OMC (A52SXQ_CHN_TW)
-          - model: "SM-A528B"
-            region: "BRI"
-          # ODM OMC
-          - model: "SM-A528B"
+          # EUX OMC (R9Q_EUX_B)
+          - model: "SM-G990B"
+            region: "EUX"
+          # EUX OMC (R9Q2_EUX_B2)
+          - model: "SM-G990B2"
+            region: "EUX"
+          # INS (R8Q INDIA)
+          - model: "SM-G781B"
             region: "INS"
-          # OJM OMC
-          - model: "SM-A528B"
-            region: "EGY"
-          # OKR OMC
-          - model: "SM-A528N"
-            region: "KOO"
-          # OLE OMC
-          - model: "SM-A528B"
-            region: "XID"
-          # OLM OMC
-          - model: "SM-A528B"
-            region: "XSA"
-          # OWA OMC
-          - model: "SM-A528B"
-            region: "CDR"
-          # OWM OMC
-          - model: "SM-A528B"
-            region: "TGP"
-          # OWO OMC
-          - model: "SM-A528B"
-            region: "PEO"
-          # OXM OMC
-          - model: "SM-A528B"
-            region: "BTU"
 
     steps:
       - name: Checkout repo
@@ -88,10 +67,12 @@ jobs:
       - name: Fetch firmware
         if: env.need_update == 1
         run: |
-          if [[ "${{ matrix.model }}" == "SM-A528N" ]]; then
-              imei="354049881234560"
-          else
-              imei="352599501234566"
+          if [[ "${{ matrix.model }}" == "SM-G990B" ]]; then
+              imei="353718681234563"
+          elif [[ "${{ matrix.model }}" == "SM-G990B2" ]]; then
+              imei="350370851234560"
+          elif [[ "${{ matrix.model }}" == "SM-G781B" ]]; then
+              imei="352963922155224"
           fi
           samfirm -m ${{ matrix.model }} -r ${{ matrix.region }} -i $imei
 
@@ -128,8 +109,11 @@ jobs:
       - name: Extract kernel images
         if: env.need_update == 1
         env:
-          FILES: boot.img.lz4 dtbo.img.lz4 vbmeta.img.lz4 vendor_boot.img.lz4
+          FILES: boot.img.lz4 dtbo.img.lz4 vbmeta.img.lz4
         run: |
+          if [[ "${{ matrix.model }}" == "SM-G99*" ]]; then
+            FILES="$FILES vendor_boot.img.lz4"
+          fi
           for file in $FILES; do tar xvf ${{ env.ap_tar }} ${file}; done
           tar cvf ${{ env.latest_shortversion }}_kernel.tar *.lz4
           rm *.lz4
