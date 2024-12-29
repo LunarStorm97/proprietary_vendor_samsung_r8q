@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           # EUX OMC (R9Q_EUX_B)
-          - model: "SM-A236B"
+          - model: "SM-A236M"
             region: "ARO" 
 
     steps:
