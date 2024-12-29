@@ -15,14 +15,8 @@ jobs:
       matrix:
         include:
           # EUX OMC (R9Q_EUX_B)
-          - model: "SM-G990B"
-            region: "EUX"
-          # EUX OMC (R9Q2_EUX_B2)
-          - model: "SM-G990B2"
-            region: "EUX"
-          # INS (R8Q INDIA)
-          - model: "SM-G781B"
-            region: "INS"
+          - model: "SM-A236B"
+            region: "ARO" 
 
     steps:
       - name: Checkout repo
@@ -67,12 +61,8 @@ jobs:
       - name: Fetch firmware
         if: env.need_update == 1
         run: |
-          if [[ "${{ matrix.model }}" == "SM-G990B" ]]; then
-              imei="353718681234563"
-          elif [[ "${{ matrix.model }}" == "SM-G990B2" ]]; then
-              imei="350370851234560"
-          elif [[ "${{ matrix.model }}" == "SM-G781B" ]]; then
-              imei="352963922155224"
+          if [[ "${{ matrix.model }}" == "SM-A236M" ]]; then
+              imei="358263681238947"
           fi
           samfirm -m ${{ matrix.model }} -r ${{ matrix.region }} -i $imei
 
